@@ -521,7 +521,7 @@ public class ZestGuidance implements Guidance {
         }
         int totalCoverageCount = totalCoverage.getNonZeroCount();
         infoLog("Total %d branches covered", totalCoverageCount);
-        if (sumResponsibilities != totalCoverageCount) {
+        if (sumResponsibilities <= totalCoverageCount) {
             throw new AssertionError("Responsibilty mistmatch");
         }
 
