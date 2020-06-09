@@ -503,7 +503,15 @@ public class ZestGuidance implements Guidance {
         infoLog("Here is a list of favored inputs:");
         int sumResponsibilities = 0;
         numFavoredLastCycle = 0;
+        Collection<Integer> validCovered = (Collection<Integer>) validCoverage.getCovered();
         for (Input input : savedInputs) {
+            if (!input.valid) {
+                for (int idx : validCovered) {
+                    if (input.responsibilities.contains(idx)) {
+                        input.responsibilities.remove(idx);
+                    }
+                }
+            }
             if (input.isFavored()) {
                 int responsibleFor = input.responsibilities.size();
                 infoLog("Input %d is responsible for %d branches", input.id, responsibleFor);
