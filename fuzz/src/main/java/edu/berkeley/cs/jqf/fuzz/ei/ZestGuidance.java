@@ -787,7 +787,7 @@ public class ZestGuidance implements Guidance {
         Collection<Integer> newValidCoverage = (Collection<Integer>) runCoverage.computeNewCoverage(validCoverage);
 
         // This input is responsible for all new valid coverage not covered by previous inputs
-        if (newCoverage.size() > 0 && newValidCoverage.size() > 0) {
+        if (!valid && newCoverage.size() > 0 && newValidCoverage.size() > 0) {
             Set<Integer> newCoverageSet = new HashSet<>();
             newCoverageSet.addAll(newCoverage);
 
@@ -799,6 +799,11 @@ public class ZestGuidance implements Guidance {
             }
             if (intersection.size() > 0) {
                 result.addAll(intersection);
+            }
+        }
+        if (valid) {
+            if (newValidCoverage.size() > 0) {
+                result.addAll(newValidCoverage);
             }
         }
 
