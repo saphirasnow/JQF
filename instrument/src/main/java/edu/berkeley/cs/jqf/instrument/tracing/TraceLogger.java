@@ -57,8 +57,6 @@ public class TraceLogger extends AbstractLogger {
         // Singleton: Prevent outside construction
     }
 
-    public void s
-
     private ThreadTracer getTracer() {
         if (USE_SINGLE_TRACER) {
             if (singletonTracer == null) {
