@@ -46,11 +46,28 @@ public class TraceLogger extends AbstractLogger {
 
     private static final TraceLogger singleton = new TraceLogger();
 
-    private final ThreadLocal<ThreadTracer> tracer
+    private ThreadTracer singletonTracer;
+
+    private final ThreadLocal<ThreadTracer> threadLocalTracer
             = ThreadLocal.withInitial(() -> ThreadTracer.spawn(Thread.currentThread()));
+
+    private static final boolean USE_SINGLE_TRACER = true;
 
     private TraceLogger() {
         // Singleton: Prevent outside construction
+    }
+
+    public void s
+
+    private ThreadTracer getTracer() {
+        if (USE_SINGLE_TRACER) {
+            if (singletonTracer == null) {
+                singletonTracer = ThreadTracer.spawn(Thread.currentThread());
+            }
+            return singletonTracer;
+        } else {
+            return threadLocalTracer.get();
+        }
     }
 
     /**
@@ -65,7 +82,7 @@ public class TraceLogger extends AbstractLogger {
     /** Logs an instrumented byteode instruction for the current thread. */
     @Override
     protected void log(Instruction instruction) {
-        tracer.get().consume(instruction);
+        getTracer().consume(instruction);
     }
 
     /**
@@ -74,14 +91,15 @@ public class TraceLogger extends AbstractLogger {
      * @param event the event to be emitted
      */
     public void emit(TraceEvent event) {
-        tracer.get().emit(event);
+        getTracer().emit(event);
     }
 
     /**
      * Removes the trace logger for the current thread
      */
     public void remove() {
-        tracer.remove();
+        threadLocalTracer.remove();
+        singletonTracer = null;
     }
 
 }
